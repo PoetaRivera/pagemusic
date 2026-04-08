@@ -2,7 +2,9 @@ node_modules/
 server/node_modules/
 client/node_modules/
 server/.env
-server/database/
+server/database/*.db
+server/database/*.db-shm
+server/database/*.db-wal
 client/dist/
 *.mp3
 .claude/
