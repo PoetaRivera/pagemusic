@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { searchSongs } from '../../api/songs'
 import { usePlayerStore } from '../../store/playerStore'
-import { BsSearch } from 'react-icons/bs'
+import { BsSearch, BsList } from 'react-icons/bs'
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [showResults, setShowResults] = useState(false)
@@ -37,7 +37,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-40 px-6 py-3 flex items-center justify-center"
+    <nav className="sticky top-0 z-40 px-4 py-3 flex items-center gap-3"
       style={{
         background: 'rgba(13,13,15,0.8)',
         backdropFilter: 'blur(20px)',
@@ -45,7 +45,17 @@ export default function Navbar() {
         borderBottom: '1px solid var(--border)',
       }}>
 
-      <div className="relative w-full max-w-md">
+      {/* Hamburguesa — solo móvil */}
+      <button
+        onClick={onMenuClick}
+        className="md:hidden p-2 rounded-lg flex-shrink-0 transition-colors"
+        style={{ color: 'var(--text-muted)' }}
+      >
+        <BsList className="text-xl" />
+      </button>
+
+      {/* Barra de búsqueda */}
+      <div className="relative flex-1 max-w-md mx-auto">
         <BsSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-sm pointer-events-none"
           style={{ color: 'var(--text-muted)' }} />
         <input

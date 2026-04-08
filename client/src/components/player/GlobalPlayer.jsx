@@ -189,7 +189,7 @@ export default function GlobalPlayer() {
         </div>
       )}
 
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-6 py-3"
+      <div className="fixed bottom-0 left-0 right-0 z-50 px-3 md:px-6 py-2 md:py-3"
         style={{
           background: 'rgba(13,13,15,0.85)',
           backdropFilter: 'blur(24px)',
@@ -198,11 +198,11 @@ export default function GlobalPlayer() {
           boxShadow: '0 -8px 32px rgba(0,0,0,0.5)',
           minHeight: '76px',
         }}>
-        <div className="max-w-screen-xl mx-auto flex items-center gap-4">
+        <div className="max-w-screen-xl mx-auto flex items-center gap-3">
 
           {/* Info canción */}
-          <div className="flex items-center gap-3 w-60 flex-shrink-0 min-w-0">
-            <div className="w-12 h-12 rounded-lg flex-shrink-0 overflow-hidden shadow-lg" style={{ background: 'var(--bg-hover)' }}>
+          <div className="flex items-center gap-2 flex-1 min-w-0 md:w-60 md:flex-shrink-0">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg flex-shrink-0 overflow-hidden shadow-lg" style={{ background: 'var(--bg-hover)' }}>
               {currentSong.cover_url
                 ? <img src={currentSong.cover_url} alt="" className="w-full h-full object-cover" />
                 : <div className="w-full h-full flex items-center justify-center">
@@ -217,29 +217,27 @@ export default function GlobalPlayer() {
           </div>
 
           {/* Controles centrales */}
-          <div className="flex-1 flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-1 md:gap-2 md:flex-1">
             {audioError && (
               <div className="flex items-center gap-1 text-red-400 text-xs">
                 <BsExclamationCircle />
-                <span>{audioError}</span>
+                <span className="hidden sm:inline">{audioError}</span>
               </div>
             )}
-            <div className="flex items-center gap-5">
-              <button onClick={toggleShuffle} className="text-lg transition-colors"
+            <div className="flex items-center gap-3 md:gap-5">
+              {/* Shuffle — oculto en móvil */}
+              <button onClick={toggleShuffle} className="text-lg transition-colors hidden md:block"
                 style={{ color: isShuffle ? 'var(--accent)' : 'var(--text-muted)' }}>
                 <BsShuffle />
               </button>
-              <button onClick={playPrev} className="text-xl transition-colors hover:scale-110"
+              <button onClick={playPrev} className="text-xl transition-colors active:scale-95"
                 style={{ color: 'var(--text-secondary)' }}>
                 <BsSkipStartFill />
               </button>
               <button
                 onClick={togglePlay}
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:scale-105 active:scale-95"
-                style={{
-                  background: 'var(--accent)',
-                  boxShadow: '0 0 20px var(--accent-glow)',
-                }}
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform active:scale-95"
+                style={{ background: 'var(--accent)', boxShadow: '0 0 20px var(--accent-glow)' }}
               >
                 {isLoading
                   ? <BsArrowRepeat className="text-lg animate-spin" />
@@ -248,20 +246,20 @@ export default function GlobalPlayer() {
                     : <BsPlayFill className="text-lg ml-0.5" />
                 }
               </button>
-              <button onClick={playNext} className="text-xl transition-colors hover:scale-110"
+              <button onClick={playNext} className="text-xl transition-colors active:scale-95"
                 style={{ color: 'var(--text-secondary)' }}>
                 <BsSkipEndFill />
               </button>
-              <button onClick={toggleRepeat} className="text-lg transition-colors"
-                style={{ color: isRepeat !== 'none' ? 'var(--accent)' : 'var(--text-muted)' }}
-                title={isRepeat === 'none' ? 'Sin repetición' : isRepeat === 'all' ? 'Repetir todo' : 'Repetir una'}>
+              {/* Repeat — oculto en móvil */}
+              <button onClick={toggleRepeat} className="text-lg transition-colors hidden md:block"
+                style={{ color: isRepeat !== 'none' ? 'var(--accent)' : 'var(--text-muted)' }}>
                 {isRepeat === 'one' ? <BsRepeat1 /> : <BsRepeat />}
               </button>
             </div>
 
-            {/* Barra de progreso */}
-            <div className="w-full max-w-lg flex items-center gap-2">
-              <span className="text-xs w-8 text-right" style={{ color: 'var(--text-muted)' }}>{formatTime(displayTime)}</span>
+            {/* Barra de progreso — oculta en móvil muy pequeño */}
+            <div className="w-full max-w-xs md:max-w-lg flex items-center gap-2">
+              <span className="text-xs w-8 text-right hidden sm:block" style={{ color: 'var(--text-muted)' }}>{formatTime(displayTime)}</span>
               <input
                 type="range"
                 min={0}
@@ -276,12 +274,12 @@ export default function GlobalPlayer() {
                 className="flex-1 cursor-pointer"
                 style={{ accentColor: 'var(--accent)' }}
               />
-              <span className="text-xs w-8" style={{ color: 'var(--text-muted)' }}>{formatTime(duration)}</span>
+              <span className="text-xs w-8 hidden sm:block" style={{ color: 'var(--text-muted)' }}>{formatTime(duration)}</span>
             </div>
           </div>
 
-          {/* Volumen + cola */}
-          <div className="flex items-center gap-3 w-40 flex-shrink-0">
+          {/* Volumen + cola — oculto en móvil */}
+          <div className="hidden md:flex items-center gap-3 w-40 flex-shrink-0">
             <button onClick={toggleQueue} className="text-lg transition-colors" title="Ver cola"
               style={{ color: showQueue ? 'var(--accent)' : 'var(--text-muted)' }}>
               <BsListUl />

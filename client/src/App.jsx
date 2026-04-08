@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { useAdminStore } from './store/adminStore'
 import Navbar from './components/layout/Navbar'
@@ -16,15 +17,18 @@ function AdminProtectedRoute() {
 }
 
 export default function App() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-screen" style={{ background: 'var(--bg-base)' }}>
-        {/* Navbar superior */}
-        <Navbar />
+        <Navbar onMenuClick={() => setMobileMenuOpen(true)} />
 
-        {/* Sidebar + contenido */}
         <div className="flex flex-1 overflow-hidden" style={{ paddingBottom: '76px' }}>
-          <Sidebar />
+          <Sidebar
+            mobileOpen={mobileMenuOpen}
+            onClose={() => setMobileMenuOpen(false)}
+          />
           <main className="flex-1 overflow-y-auto" style={{ color: 'var(--text-primary)' }}>
             <Routes>
               <Route path="/" element={<HomePage />} />
