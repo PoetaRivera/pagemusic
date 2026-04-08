@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat /c/CARPETA-RESPALDO/Escritorio/misproyectos/REACT-NODEJS/pedidos-react-nodejs/src/middlewares/*.js)",
+      "Bash(cat /c/CARPETA-RESPALDO/Escritorio/misproyectos/REACT-NODEJS/pedidos-react-nodejs/client/src/api/*.js)",
+      "Bash(cd:*)",
+      "Bash(npm install:*)",
+      "Bash(npm create:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(./node_modules/.bin/tailwindcss init:*)",
+      "Bash(npm run:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(ffmpeg -version)",
+      "Bash(where ffmpeg:*)",
+      "Read(//usr/local/bin/**)",
+      "Bash(choco --version)",
+      "Bash(choco install:*)",
+      "Bash(export PATH=\"$PATH:/c/ProgramData/chocolatey/bin\")",
+      "Bash(node:*)",
+      "Bash(git --version)",
+      "Bash(git lfs:*)",
+      "Bash(gh --version)",
+      "Bash(gh auth:*)",
+      "Bash(gh repo:*)",
+      "Bash(netstat -ano)",
+      "Bash(curl -s \"http://localhost:4000/api/songs\")",
+      "Bash(curl:*)",
+      "WebSearch",
+      "WebFetch(domain:blog.tubikstudio.com)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:pixso.net)",
+      "WebFetch(domain:www.onething.design)",
+      "WebFetch(domain:www.eggradients.com)",
+      "WebFetch(domain:piunikaweb.com)",
+      "WebFetch(domain:ui-deploy.com)",
+      "WebFetch(domain:www.untitledui.com)"
+    ]
+  }
+}
