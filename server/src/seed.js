@@ -2,23 +2,21 @@ import Database from 'better-sqlite3'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const db = new Database(path.join(__dirname, '../database/pagemusic.db'))
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-db.pragma('foreign_keys = ON')
+export function seedIfEmpty(db) {
+  const existingGenres = db.prepare('SELECT COUNT(*) as count FROM genres').get()
+  if (existingGenres.count > 0) {
+    console.log('Database already seeded, skipping.')
+    return
+  }
 
-const existingGenres = db.prepare('SELECT COUNT(*) as count FROM genres').get()
-if (existingGenres.count > 0) {
-  console.log('Database already seeded, skipping.')
-  db.close()
-  process.exit(0)
-}
+  console.log('Seeding database...')
 
-console.log('Seeding database...')
-
-const insertGenre = db.prepare('INSERT INTO genres (name, description) VALUES (?, ?)')
-const insertSong = db.prepare('INSERT INTO songs (title, artist, duration, audio_url, cover_url, genre_id) VALUES (?, ?, ?, ?, ?, ?)')
-const getGenreId = db.prepare('SELECT id FROM genres WHERE name = ?')
+  const insertGenre = db.prepare('INSERT INTO genres (name, description) VALUES (?, ?)')
+  const insertSong = db.prepare('INSERT INTO songs (title, artist, duration, audio_url, cover_url, genre_id) VALUES (?, ?, ?, ?, ?, ?)')
+  const getGenreId = db.prepare('SELECT id FROM genres WHERE name = ?')
 
 const genres = [
   { name: "Pop Rock", description: "Mezcla de pop y rock" },
@@ -31,11 +29,12 @@ const genres = [
   { name: "bolero", description: "Bolero y música romántica" },
   { name: "pop", description: "Música pop y popular" },
   { name: "otros", description: "Otros estilos musicales" },
+  { name: "declamado", description: "Poemas declamados" },
 ]
 
-for (const g of genres) {
-  insertGenre.run(g.name, g.description)
-}
+  for (const g of genres) {
+    insertGenre.run(g.name, g.description)
+  }
 
 const songs = [
   { title: "Amé-bachata", artist: "PoetaRivera", duration: 148, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/bachata/Am%C3%A9-bachata.mp3", cover_url: null, genre: "bachata" },
@@ -175,13 +174,56 @@ const songs = [
   { title: "su sonrisa-trova", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/trova/su%20sonrisa-trova.mp3", cover_url: null, genre: "trova" },
   { title: "sueños  deshijados-trova", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/trova/sue%C3%B1os%20%20deshijados-trova.mp3", cover_url: null, genre: "trova" },
   { title: "tornado-trova", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/trova/tornado-trova.mp3", cover_url: null, genre: "trova" },
+  // Poemas declamados
+  { title: "Al maestro", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Al%20maestro-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Amé", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Am%C3%A9-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Amor es", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Amor%20es-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Amor secreto", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Amor%20secreto-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Anhelos", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Anhelos-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Añoranza", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/A%C3%B1oranza-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Centro América Anhelada", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Centro%20America%20Anhelada-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Como saber si la amas", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/como%20saber%20si%20la%20amas-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Con la mirada", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Con%20la%20mirada-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Corazón de torogoz", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Corazon%20de%20torogoz-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Distancia", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Distancia-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "El arribo", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/El%20arribo-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "El placer de matar", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/El%20placer%20de%20matar-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Ella ella lleva un hijo", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Ella%20ella%20lleva%20un%20hijo-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Ella", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Ella-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Ese día", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Ese%20dia-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Hasta pronto Mauricio", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Hasta%20pronto%20mauricio-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Hasta pronto", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Hasta%20pronto-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Hay amores", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Hay%20amores-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Hay palabras", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Hay%20palabras-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Hijo de la desidia", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Hijo%20de%20la%20descidia-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Juventud y vejez", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Juventud%20y%20Vejez-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "La espera", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/La%20Espera-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Lazos invisibles", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Lazos%20invisibles-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Los años postreros", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Los%20a%C3%B1os%20postreros-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "No hay nada perdido", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/No%20hay%20nada%20perdido-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Para mi hermanita", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Para%20mi%20hermanita-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Quizá", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Quiza-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Reclamo de un infante", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Reclamo%20de%20un%20infante-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Río Bravo", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/R%C3%ADo%20Bravo-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Se fue y", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Se%20fue%20y-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Se fue", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Se%20fue-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Suchitlán", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Suchitl%C3%A1n-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
+  { title: "Un amor que nunca llegó", artist: "PoetaRivera", duration: null, audio_url: "https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main/declamado/Un%20amor%20que%20nunca%20llego-ryp-declamado.mp3", cover_url: null, genre: "declamado" },
 ]
 
-for (const s of songs) {
-  const genre = getGenreId.get(s.genre)
-  if (!genre) { console.warn('Genre not found:', s.genre); continue }
-  insertSong.run(s.title, s.artist, s.duration, s.audio_url, s.cover_url, genre.id)
+  for (const s of songs) {
+    const genre = getGenreId.get(s.genre)
+    if (!genre) { console.warn('Genre not found:', s.genre); continue }
+    insertSong.run(s.title, s.artist, s.duration, s.audio_url, s.cover_url, genre.id)
+  }
+
+  console.log(`Seeded ${genres.length} genres and ${songs.length} songs.`)
 }
 
-console.log(`Seeded ${genres.length} genres and ${songs.length} songs.`)
-db.close()
+// Permite correr el script standalone: node src/seed.js
+if (process.argv[1] === __filename) {
+  const standaloneDb = new Database(path.join(__dirname, '../database/pagemusic.db'))
+  standaloneDb.pragma('foreign_keys = ON')
+  seedIfEmpty(standaloneDb)
+  standaloneDb.close()
+}

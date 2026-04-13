@@ -1,0 +1,63 @@
+# Seguimiento Fase 1 - PageMusic
+
+## Completado
+
+### 2026-04-08
+- **QR Code generado**: Se creó el archivo `qrcode.html` en la raíz del proyecto.
+  - Genera un código QR para `https://pagemusic-production.up.railway.app/`
+  - Incluye botón para descargar el QR como imagen PNG
+  - Estilo oscuro acorde al diseño de PageMusic
+  - Usa la librería QRCode.js desde CDN
+
+### 2026-04-09
+- **Pruebas unitarias backend**: Se implementaron 34 tests — todos pasando ✓
+  - Stack: Jest + Supertest + SQLite `:memory:` en `NODE_ENV=test`
+  - Archivos creados:
+    - `server/jest.config.js`
+    - `server/src/tests/helpers.js` — utilidades: resetDB, seedGenre, seedSong, getAdminToken
+    - `server/src/tests/auth.test.js` — 7 tests (login + verify token)
+    - `server/src/tests/genres.test.js` — 14 tests (CRUD completo de géneros)
+    - `server/src/tests/songs.test.js` — 13 tests (CRUD + search + duration patch)
+  - Comando para correr: `cd server && npm test`
+
+### 2026-04-09
+- **Pruebas unitarias frontend**: Se implementaron 45 tests — todos pasando ✓
+  - Stack: Vitest + @testing-library/react + jsdom
+  - Archivos creados:
+    - `client/src/tests/setup.js` — importa @testing-library/jest-dom
+    - `client/src/tests/Spinner.test.jsx` — 2 tests
+    - `client/src/tests/Modal.test.jsx` — 4 tests (open/close, children, onClose)
+    - `client/src/tests/GenreCard.test.jsx` — 4 tests (render, link, cover_url)
+    - `client/src/tests/SongCard.test.jsx` — 5 tests (render, formatDuration, playSong)
+    - `client/src/tests/SongList.test.jsx` — 3 tests (render, vacío)
+    - `client/src/tests/playerStore.test.js` — 13 tests (playSong, togglePlay, next/prev, repeat, shuffle)
+    - `client/src/tests/playlistStore.test.js` — 11 tests (CRUD playlists, addSong sin duplicados)
+  - Comando para correr: `cd client && npm test`
+
+### 2026-04-09 (bug crítico producción)
+- **Bug fix: servidor no arrancaba en Railway** — `seed.js` llamaba `process.exit(0)` al ser importado por `index.js`. Si la DB ya tenía datos, el proceso moría antes de escuchar en el puerto.
+  - `seed.js`: convertido a función exportable `seedIfEmpty(db)`, sin `process.exit`. Aún funciona standalone con `node src/seed.js`
+  - `db.js`: llama `seedIfEmpty(db)` directamente (solo en non-test)
+  - `index.js`: eliminado el `import './seed.js'`
+  - Tests: 34/34 siguen pasando
+
+### 2026-04-12
+- **Funcionalidad: Navegación por artista** — implementación completa
+  - Backend:
+    - `GET /api/artists` — lista todos los artistas con cantidad de canciones y géneros
+    - `GET /api/artists/:name/songs` — canciones de un artista específico
+    - Búsqueda extendida: ahora busca también por nombre de artista
+  - Frontend:
+    - `ArtistCard.jsx` — tarjeta de artista con gradiente y contador de canciones
+    - `ArtistsPage.jsx` — página de listado de artistas (`/artists`)
+    - `ArtistPage.jsx` — página individual del artista con Reproducir y Aleatorio (`/artist/:name`)
+    - `Sidebar.jsx` — nuevo ítem "Artistas" en la navegación
+    - `App.jsx` — nuevas rutas `/artists` y `/artist/:name`
+    - `api/artists.js` — funciones de API para artistas
+  - Tests backend: 34/34 siguen pasando
+
+## Pendiente / Por donde continuar
+
+- Cobertura de código (coverage report): `vitest run --coverage`
+- Agregar tests de páginas (HomePage, GenrePage, AdminLoginPage)
+- Abrir `qrcode.html` en el navegador para visualizar y descargar el QR

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code - PageMusic</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      max-width: 380px;
+      width: 90%;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      color: #e63946;
+      letter-spacing: 1px;
+    }
+    p.subtitle {
+      color: #888;
+      font-size: 0.85rem;
+      margin-bottom: 28px;
+    }
+    .qr-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .qr-wrapper img {
+      border-radius: 8px;
+      border: 6px solid #fff;
+      width: 240px;
+      height: 240px;
+    }
+    .url-label {
+      font-size: 0.78rem;
+      color: #aaa;
+      word-break: break-all;
+      background: #111;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #2a2a2a;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: inline-block;
+      background: #e63946;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #c1121f; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>PageMusic</h1>
+    <p class="subtitle">Escanea para abrir la app</p>
+    <div class="qr-wrapper">
+      <img id="qr-img"
+        src="https://api.qrserver.com/v1/create-qr-code/?size=480x480&data=https%3A%2F%2Fpagemusic-production.up.railway.app%2F&ecc=H&margin=1"
+        alt="QR Code PageMusic"
+        crossorigin="anonymous"
+      />
+    </div>
+    <div class="url-label">https://pagemusic-production.up.railway.app/</div>
+    <button class="btn" onclick="descargar()">Descargar QR</button>
+  </div>
+
+  <script>
+    function descargar() {
+      const img = document.getElementById("qr-img");
+      const canvas = document.createElement("canvas");
+      canvas.width = 480;
+      canvas.height = 480;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, 480, 480);
+      const link = document.createElement("a");
+      link.download = "pagemusic-qr.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+</body>
+</html>

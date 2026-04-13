@@ -10,6 +10,8 @@ import PlaylistsPage from './pages/PlaylistsPage'
 import PlaylistDetailPage from './pages/PlaylistDetailPage'
 import AdminLoginPage from './pages/AdminLoginPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
+import ArtistsPage from './pages/ArtistsPage'
+import ArtistPage from './pages/ArtistPage'
 
 function AdminProtectedRoute() {
   const { isAdmin } = useAdminStore()
@@ -33,6 +35,8 @@ export default function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/genre/:id" element={<GenrePage />} />
+              <Route path="/artists" element={<ArtistsPage />} />
+              <Route path="/artist/:name" element={<ArtistPage />} />
               <Route path="/playlists" element={<PlaylistsPage />} />
               <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
               <Route path="/admin" element={<AdminLoginPage />} />

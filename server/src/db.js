@@ -3,9 +3,12 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 import bcrypt from 'bcryptjs'
 import { ADMIN_USERNAME, ADMIN_PASSWORD } from './config.js'
+import { seedIfEmpty } from './seed.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const dbPath = path.join(__dirname, '../database/pagemusic.db')
+const dbPath = process.env.NODE_ENV === 'test'
+  ? ':memory:'
+  : path.join(__dirname, '../database/pagemusic.db')
 
 const db = new Database(dbPath)
 
@@ -59,6 +62,11 @@ if (!adminExists) {
   const hash = bcrypt.hashSync(ADMIN_PASSWORD, 10)
   db.prepare('INSERT INTO admin (username, password_hash) VALUES (?, ?)').run(ADMIN_USERNAME, hash)
   console.log(`Admin creado: ${ADMIN_USERNAME}`)
+}
+
+// Seed de géneros y canciones si la DB está vacía
+if (process.env.NODE_ENV !== 'test') {
+  seedIfEmpty(db)
 }
 
 export default db

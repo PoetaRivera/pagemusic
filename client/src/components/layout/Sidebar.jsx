@@ -3,7 +3,7 @@ import { NavLink, Link, useLocation } from 'react-router-dom'
 import { useAdminStore } from '../../store/adminStore'
 import {
   BsHouseFill, BsMusicNoteList, BsShieldLock,
-  BsChevronLeft, BsChevronRight, BsBoxArrowRight, BsX
+  BsChevronLeft, BsChevronRight, BsBoxArrowRight, BsX, BsPersonLinesFill
 } from 'react-icons/bs'
 
 export default function Sidebar({ mobileOpen, onClose }) {
@@ -82,6 +82,7 @@ export default function Sidebar({ mobileOpen, onClose }) {
       {/* Nav items */}
       <nav className="flex-1 px-2 flex flex-col gap-1">
         {navItem('/', BsHouseFill, 'Inicio')}
+        {navItem('/artists', BsPersonLinesFill, 'Artistas')}
         {navItem('/playlists', BsMusicNoteList, 'Mis listas')}
         {isAdmin && (
           <>

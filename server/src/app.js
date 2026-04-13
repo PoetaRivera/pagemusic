@@ -9,6 +9,7 @@ import genresRoutes from './routes/genres.routes.js'
 import songsRoutes from './routes/songs.routes.js'
 import uploadRoutes from './routes/upload.routes.js'
 import statsRoutes from './routes/stats.routes.js'
+import artistsRoutes from './routes/artists.routes.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -26,6 +27,7 @@ app.use('/api/admin/upload', uploadRoutes)
 app.use('/api/genres', genresRoutes)
 app.use('/api/songs', songsRoutes)
 app.use('/api/stats', statsRoutes)
+app.use('/api/artists', artistsRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   const __dirname = path.dirname(fileURLToPath(import.meta.url))

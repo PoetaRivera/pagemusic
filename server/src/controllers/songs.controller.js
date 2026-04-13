@@ -22,9 +22,9 @@ export const search = (req, res) => {
     SELECT songs.*, genres.name AS genre_name
     FROM songs
     JOIN genres ON songs.genre_id = genres.id
-    WHERE LOWER(songs.title) LIKE ?
+    WHERE LOWER(songs.title) LIKE ? OR LOWER(songs.artist) LIKE ?
     ORDER BY songs.title
-  `).all(`%${searchTerm}%`)
+  `).all(`%${searchTerm}%`, `%${searchTerm}%`)
 
   res.json(songs)
 }
