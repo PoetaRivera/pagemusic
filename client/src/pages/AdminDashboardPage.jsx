@@ -19,6 +19,7 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [toast, setToast] = useState(null)
 
   // Stats
   const [stats, setStats] = useState(null)
@@ -28,6 +29,11 @@ export default function AdminDashboardPage() {
   const [modal, setModal] = useState({ open: false, type: null, item: null })
   // Confirmación borrado
   const [confirm, setConfirm] = useState({ open: false, type: null, item: null })
+
+  const showToast = (msg) => {
+    setToast(msg)
+    setTimeout(() => setToast(null), 3000)
+  }
 
   const loadData = async () => {
     setLoading(true)
@@ -75,8 +81,10 @@ export default function AdminDashboardPage() {
     try {
       if (modal.item) {
         await updateGenre(modal.item.id, data)
+        showToast('Género actualizado correctamente')
       } else {
         await createGenre(data)
+        showToast('Género creado correctamente')
       }
       await loadData()
       closeModal()
@@ -94,6 +102,7 @@ export default function AdminDashboardPage() {
       await deleteGenre(confirm.item.id)
       await loadData()
       setConfirm({ open: false, type: null, item: null })
+      showToast('Género eliminado')
     } catch (err) {
       setError(err.response?.data?.message || 'Error al eliminar')
     } finally {
@@ -108,8 +117,10 @@ export default function AdminDashboardPage() {
     try {
       if (modal.item) {
         await updateSong(modal.item.id, data)
+        showToast('Canción actualizada correctamente')
       } else {
         await createSong(data)
+        showToast('Canción creada correctamente')
       }
       await loadData()
       closeModal()
@@ -127,6 +138,7 @@ export default function AdminDashboardPage() {
       await deleteSong(confirm.item.id)
       await loadData()
       setConfirm({ open: false, type: null, item: null })
+      showToast('Canción eliminada')
     } catch (err) {
       setError(err.response?.data?.message || 'Error al eliminar')
     } finally {
@@ -137,6 +149,13 @@ export default function AdminDashboardPage() {
   return (
     <div className="max-w-screen-xl mx-auto px-6 py-8">
       <h1 className="text-2xl font-bold text-white mb-6">Panel de administración</h1>
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white text-sm font-medium px-5 py-3 rounded-xl shadow-lg animate-fade-in">
+          {toast}
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 bg-gray-800 p-1 rounded-lg w-fit mb-6">

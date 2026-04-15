@@ -21,7 +21,7 @@ export default function SongForm({ initial, genres, onSubmit, loading }) {
         duration: initial.duration ?? '',
         audio_url: initial.audio_url || '',
         cover_url: initial.cover_url || '',
-        genre_id: initial.genre_id ?? '',
+        genre_id: initial.genre_id != null ? String(initial.genre_id) : '',
       })
     } else {
       setForm(empty)

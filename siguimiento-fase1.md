@@ -65,6 +65,15 @@
   - Si se pulsa la canción que ya está reproduciendo, alterna play/pause
   - La cola de reproducción se establece con todas las canciones de la tabla
 
+### 2026-04-15 (bug fix)
+- **Bug fix: genre_id como número no emparejaba el `<select>`**
+  - `SongForm.jsx` línea 24: `initial.genre_id` llega como número desde la DB pero el `<select>` compara strings → el género no se preseleccionaba correctamente al editar
+  - Fix: `String(initial.genre_id)` al inicializar el form
+- **Mejora: toast de confirmación en panel admin**
+  - `AdminDashboardPage.jsx`: se agregó estado `toast` y función `showToast`
+  - Se muestra mensaje verde flotante por 3 segundos al crear, editar o eliminar canciones y géneros
+  - Elimina la ambigüedad de si el cambio fue guardado o no
+
 ## Pendiente / Por donde continuar
 
 - Cobertura de código (coverage report): `vitest run --coverage`
