@@ -56,6 +56,15 @@
     - `api/artists.js` — funciones de API para artistas
   - Tests backend: 34/34 siguen pasando
 
+### 2026-04-15
+- **Funcionalidad: Reproducir canciones desde panel admin** — implementación completa
+  - Archivo modificado: `client/src/components/admin/SongTable.jsx`
+  - Se agregó botón Play/Pause en cada fila de la tabla de canciones del admin
+  - Al hacer clic en la portada (hover muestra el ícono) o en el botón de la columna de acciones, se reproduce la canción usando el `playerStore` existente
+  - La canción activa se resalta en morado (título en púrpura, fila con fondo sutil)
+  - Si se pulsa la canción que ya está reproduciendo, alterna play/pause
+  - La cola de reproducción se establece con todas las canciones de la tabla
+
 ## Pendiente / Por donde continuar
 
 - Cobertura de código (coverage report): `vitest run --coverage`
