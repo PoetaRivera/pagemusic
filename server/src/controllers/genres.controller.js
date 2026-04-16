@@ -1,7 +1,13 @@
 import db from '../db.js'
 
 export const getAll = (req, res) => {
-  const genres = db.prepare('SELECT * FROM genres ORDER BY name').all()
+  const genres = db.prepare(`
+    SELECT g.*, COUNT(s.id) AS song_count
+    FROM genres g
+    LEFT JOIN songs s ON s.genre_id = g.id
+    GROUP BY g.id
+    ORDER BY g.name
+  `).all()
   res.json(genres)
 }
 

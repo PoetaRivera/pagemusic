@@ -13,6 +13,7 @@ export default function GenreTable({ genres, onEdit, onDelete }) {
             <th className="text-left py-3 px-2 font-medium">Portada</th>
             <th className="text-left py-3 px-2 font-medium">Nombre</th>
             <th className="text-left py-3 px-2 font-medium hidden sm:table-cell">Descripción</th>
+            <th className="text-left py-3 px-2 font-medium hidden md:table-cell">Canciones</th>
             <th className="py-3 px-2" />
           </tr>
         </thead>
@@ -30,6 +31,9 @@ export default function GenreTable({ genres, onEdit, onDelete }) {
               <td className="py-3 px-2 text-white font-medium">{genre.name}</td>
               <td className="py-3 px-2 text-gray-400 hidden sm:table-cell max-w-xs truncate">
                 {genre.description || '—'}
+              </td>
+              <td className="py-3 px-2 text-gray-300 hidden md:table-cell">
+                {genre.song_count ?? 0}
               </td>
               <td className="py-3 px-2">
                 <div className="flex items-center justify-end gap-2">

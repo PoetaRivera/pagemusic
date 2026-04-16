@@ -74,6 +74,11 @@
   - Se muestra mensaje verde flotante por 3 segundos al crear, editar o eliminar canciones y géneros
   - Elimina la ambigüedad de si el cambio fue guardado o no
 
+### 2026-04-16
+- **Mejora: conteo de canciones en tabla de géneros (admin)**
+  - `server/src/controllers/genres.controller.js`: `getAll` ahora hace LEFT JOIN con `songs` y retorna `song_count` por género
+  - `client/src/components/admin/GenreTable.jsx`: nueva columna "Canciones" visible desde pantallas `md` en adelante, muestra el conteo
+
 ## Pendiente / Por donde continuar
 
 - Cobertura de código (coverage report): `vitest run --coverage`
