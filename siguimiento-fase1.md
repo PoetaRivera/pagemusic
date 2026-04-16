@@ -79,6 +79,13 @@
   - `server/src/controllers/genres.controller.js`: `getAll` ahora hace LEFT JOIN con `songs` y retorna `song_count` por género
   - `client/src/components/admin/GenreTable.jsx`: nueva columna "Canciones" visible desde pantallas `md` en adelante, muestra el conteo
 
+- **Limpieza y resubida completa de audios (226 MP3)**
+  - Repo `PoetaRivera/pagemusic-storage`: todos los archivos viejos eliminados y reemplazados con los 226 archivos locales desde `MUSICA-POEMAS/audios/mp3/`, organizados por género
+  - Géneros nuevos añadidos: `soul` (8) y `bossanova` (2)
+  - `server/src/seed.js`: reescrito con los 226 canciones y 12 géneros correctos
+  - `server/src/reset-and-seed.js`: script nuevo para limpiar la DB de producción y re-sembrar
+  - **Pendiente ejecutar en Railway**: `cd server && railway run node src/reset-and-seed.js`
+
 ## Pendiente / Por donde continuar
 
 - Cobertura de código (coverage report): `vitest run --coverage`
