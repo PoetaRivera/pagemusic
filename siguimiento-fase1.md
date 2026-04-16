@@ -86,6 +86,12 @@
   - `server/src/reset-and-seed.js`: script nuevo para limpiar la DB de producción y re-sembrar
   - **Pendiente ejecutar en Railway**: `cd server && railway run node src/reset-and-seed.js`
 
+### 2026-04-16 (script)
+- **Script `add-songs.js`** para agregar canciones nuevas sin tocar el admin
+  - Uso: `node add-songs.js <género> [archivo.mp3]`
+  - Copia el MP3 a `pagemusic-storage-temp`, hace commit+push con LFS, llama la API de producción para insertar en la DB
+  - Requiere que `pagemusic-storage-temp` exista en `C:/CARPETA-RESPALDO/Escritorio/misproyectos/`
+
 ## Pendiente / Por donde continuar
 
 - Cobertura de código (coverage report): `vitest run --coverage`
