@@ -1,0 +1,92 @@
+================================================================
+  CÓMO USAR add-songs.js — Agregar canciones a PageMusic
+================================================================
+
+REQUISITOS PREVIOS
+------------------
+1. Node.js instalado
+2. La carpeta pagemusic-storage-temp debe existir en:
+   C:\CARPETA-RESPALDO\Escritorio\misproyectos\pagemusic-storage-temp
+
+   Si no existe, clónala con:
+   git clone https://github.com/PoetaRivera/pagemusic-storage.git pagemusic-storage-temp
+
+3. El archivo .env en la raíz del proyecto debe tener:
+   SCRIPT_ADMIN_USER=admin
+   SCRIPT_ADMIN_PASS=tu_password
+
+   (Ya está configurado si no lo has borrado)
+
+
+GÉNEROS DISPONIBLES
+-------------------
+  bachata  |  balada  |  bolero  |  bossanova  |  declamado
+  otros    |  pop     |  rock    |  salsa      |  soul
+  tango    |  trova
+
+
+DÓNDE PONER LOS ARCHIVOS MP3
+-----------------------------
+Los archivos deben estar en la carpeta correspondiente al género:
+
+  C:\CARPETA-RESPALDO\OneDrive\MUSICA-POEMAS\audios\mp3\<género>\
+
+Ejemplo:
+  C:\CARPETA-RESPALDO\OneDrive\MUSICA-POEMAS\audios\mp3\bachata\Mi cancion.mp3
+
+
+CÓMO EJECUTAR
+-------------
+Abre una terminal en la carpeta del proyecto:
+  C:\CARPETA-RESPALDO\Escritorio\misproyectos\PAGEMUSIC
+
+Opción A — Agregar UN archivo específico:
+  node add-songs.js bachata "Mi cancion.mp3"
+
+Opción B — Agregar TODOS los mp3 de un género:
+  node add-songs.js bachata
+
+
+EJEMPLOS REALES
+---------------
+  node add-songs.js declamado "Amor eterno-ryp-declamado.mp3"
+  node add-songs.js trova "Nueva trova.mp3"
+  node add-songs.js pop
+
+
+QUÉ HACE EL SCRIPT (en orden)
+------------------------------
+  1. Copia el/los mp3 al repositorio pagemusic-storage-temp
+  2. Sube los archivos a GitHub con Git LFS (git push)
+  3. Llama la API de producción para insertar la canción en la base de datos
+
+Al terminar verás algo como:
+  ✅ Listo: 1 canción(es) agregada(s)
+
+
+ERRORES COMUNES
+---------------
+- "Archivo no encontrado"
+    → Verifica que el mp3 esté en la carpeta del género correcta
+
+- "Error: Configura SCRIPT_ADMIN_USER y SCRIPT_ADMIN_PASS"
+    → Revisa que el archivo .env exista en la raíz del proyecto
+
+- "Género no encontrado en la DB de producción"
+    → El género que escribiste no existe. Usa exactamente los nombres
+      de la lista de géneros disponibles (en minúsculas)
+
+- Error en git push
+    → Verifica que pagemusic-storage-temp esté clonado y con acceso
+      a GitHub (git push manual para confirmar)
+
+
+NOTAS IMPORTANTES
+-----------------
+- El título de la canción en la app se toma del nombre del archivo
+  sin la extensión .mp3. Ejemplo: "Mi cancion.mp3" → título "Mi cancion"
+- El artista se registra automáticamente como "PoetaRivera"
+- Si el archivo ya existe en GitHub, el push fallará. Renombra el
+  archivo antes de intentarlo de nuevo.
+
+================================================================
