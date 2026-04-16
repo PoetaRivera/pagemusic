@@ -21,17 +21,26 @@
 
 import { execSync } from 'child_process'
 import { existsSync, copyFileSync, readdirSync } from 'fs'
-import { join, basename } from 'path'
+import { join } from 'path'
 import https from 'https'
+import { config } from 'dotenv'
+
+// Cargar variables desde .env en la raíz del proyecto
+config()
 
 // ─── Configuración ───────────────────────────────────────────────────────────
 
-const SOURCE_DIR  = 'C:/CARPETA-RESPALDO/OneDrive/MUSICA-POEMAS/audios/mp3'
-const STORAGE_DIR = 'C:/CARPETA-RESPALDO/Escritorio/misproyectos/pagemusic-storage-temp'
-const PROD_API    = 'https://pagemusic-production.up.railway.app'
-const ADMIN_USER  = 'admin'
-const ADMIN_PASS  = 'Pagemusicnrrv130459#'
+const SOURCE_DIR  = process.env.MUSIC_SOURCE_DIR  || 'C:/CARPETA-RESPALDO/OneDrive/MUSICA-POEMAS/audios/mp3'
+const STORAGE_DIR = process.env.STORAGE_REPO_DIR  || 'C:/CARPETA-RESPALDO/Escritorio/misproyectos/pagemusic-storage-temp'
+const PROD_API    = process.env.PROD_API_URL       || 'https://pagemusic-production.up.railway.app'
+const ADMIN_USER  = process.env.SCRIPT_ADMIN_USER
+const ADMIN_PASS  = process.env.SCRIPT_ADMIN_PASS
 const BASE_URL    = 'https://media.githubusercontent.com/media/PoetaRivera/pagemusic-storage/main'
+
+if (!ADMIN_USER || !ADMIN_PASS) {
+  console.error('\nError: Configura SCRIPT_ADMIN_USER y SCRIPT_ADMIN_PASS en el archivo .env\n')
+  process.exit(1)
+}
 
 const VALID_GENRES = ['bachata','balada','bolero','bossanova','declamado','otros','pop','rock','salsa','soul','tango','trova']
 

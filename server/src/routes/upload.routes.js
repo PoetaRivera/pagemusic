@@ -7,9 +7,13 @@ import { requireAdmin } from '../middlewares/auth.middleware.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const UPLOADS_DIR = path.join(__dirname, '../../uploads')
 
+const VALID_GENRES = ['bachata','balada','bolero','bossanova','declamado','otros','pop','rock','salsa','soul','tango','trova']
+
+const sanitizeGenre = (raw) => VALID_GENRES.includes(raw) ? raw : 'otros'
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const genre = req.query.genre || 'otros'
+    const genre = sanitizeGenre(req.query.genre)
     const genreDir = path.join(UPLOADS_DIR, genre)
     import('fs').then(({ mkdirSync }) => {
       mkdirSync(genreDir, { recursive: true })
@@ -40,7 +44,7 @@ const router = Router()
 router.post('/', requireAdmin, upload.single('audio'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No se recibió ningún archivo' })
 
-  const genre = req.query.genre || 'otros'
+  const genre = sanitizeGenre(req.query.genre)
   const filename = req.file.filename
   const protocol = req.protocol
   const host = req.get('host')

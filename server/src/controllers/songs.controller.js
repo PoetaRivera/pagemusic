@@ -16,6 +16,10 @@ export const search = (req, res) => {
     return res.json([])
   }
 
+  if (q.trim().length > 100) {
+    return res.status(400).json({ message: 'La búsqueda es demasiado larga' })
+  }
+
   const searchTerm = q.trim().toLowerCase()
 
   const songs = db.prepare(`

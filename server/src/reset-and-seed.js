@@ -1,9 +1,15 @@
 // Script standalone para limpiar songs/genres y re-sembrar
-// Uso: node src/reset-and-seed.js
+// Uso: node src/reset-and-seed.js --force
 import Database from 'better-sqlite3'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { seedIfEmpty } from './seed.js'
+
+if (!process.argv.includes('--force')) {
+  console.error('ERROR: Este script borra todos los datos. Usa --force para confirmar.')
+  console.error('  node src/reset-and-seed.js --force')
+  process.exit(1)
+}
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

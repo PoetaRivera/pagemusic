@@ -56,6 +56,12 @@ db.exec(`
   );
 `)
 
+// Índices para queries frecuentes en plays
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_plays_song_id  ON plays(song_id);
+  CREATE INDEX IF NOT EXISTS idx_plays_played_at ON plays(played_at);
+`)
+
 // Seed del admin si no existe
 const adminExists = db.prepare('SELECT id FROM admin WHERE username = ?').get(ADMIN_USERNAME)
 if (!adminExists) {

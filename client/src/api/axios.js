@@ -14,6 +14,7 @@ api.interceptors.response.use(
   err => {
     if (err.response?.status === 401) {
       useAdminStore.getState().logout()
+      window.location.href = '/admin'
     }
     return Promise.reject(err)
   }

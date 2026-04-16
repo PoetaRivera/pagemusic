@@ -51,17 +51,18 @@ export default function AdminDashboardPage() {
   const loadStats = async () => {
     setStatsLoading(true)
     try {
-      const [summary, topS, topG, hours, weekdays, skipped] = await Promise.all([
+      const results = await Promise.allSettled([
         getStatsSummary(), getTopSongs(), getTopGenres(),
         getByHour(), getByWeekday(), getMostSkipped()
       ])
+      const [summary, topS, topG, hours, weekdays, skipped] = results
       setStats({
-        summary: summary.data,
-        topSongs: topS.data,
-        topGenres: topG.data,
-        byHour: hours.data,
-        byWeekday: weekdays.data,
-        mostSkipped: skipped.data,
+        summary:     summary.status     === 'fulfilled' ? summary.value.data     : {},
+        topSongs:    topS.status        === 'fulfilled' ? topS.value.data        : [],
+        topGenres:   topG.status        === 'fulfilled' ? topG.value.data        : [],
+        byHour:      hours.status       === 'fulfilled' ? hours.value.data       : [],
+        byWeekday:   weekdays.status    === 'fulfilled' ? weekdays.value.data    : [],
+        mostSkipped: skipped.status     === 'fulfilled' ? skipped.value.data     : [],
       })
     } finally {
       setStatsLoading(false)
