@@ -92,6 +92,13 @@
   - Copia el MP3 a `pagemusic-storage-temp`, hace commit+push con LFS, llama la API de producción para insertar en la DB
   - Requiere que `pagemusic-storage-temp` exista en `C:/CARPETA-RESPALDO/Escritorio/misproyectos/`
 
+### 2026-04-16 (auditoría de seguridad)
+- **Auditoría completa + corrección de todos los hallazgos**
+  - CRÍTICOS: validación de JWT_SECRET/ADMIN_PASSWORD en producción, índices en tabla `plays`, whitelist de género en upload, expiración de token en adminStore, credenciales fuera de add-songs.js
+  - MEDIOS: rate limiting en login (10/15min), límite de 100 chars en búsqueda, flag --force en reset-and-seed, redirect a /admin en 401
+  - BAJOS: Promise.allSettled en stats, .env.example documentado, .gitignore actualizado
+  - Tests: 34/34 siguen pasando
+
 ## Pendiente / Por donde continuar
 
 - Cobertura de código (coverage report): `vitest run --coverage`
