@@ -40,7 +40,7 @@ PAGEMUSIC/
 │   │   ├── index.js            # Entry point (listen)
 │   │   ├── config.js           # Variables de entorno exportadas
 │   │   ├── db.js               # Inicialización SQLite + tablas + índices + seed admin
-│   │   ├── seed.js             # seedIfEmpty(db) — 226 canciones, 12 géneros
+│   │   ├── seed.js             # seedIfEmpty(db) — 249 canciones, 12 géneros (solo corre cuando DB está vacía)
 │   │   ├── reset-and-seed.js   # Script de reseteo (requiere --force)
 │   │   ├── controllers/
 │   │   │   ├── auth.controller.js
@@ -438,13 +438,26 @@ ADMIN_PASSWORD=         # Valor seguro distinto de 'admin1234'
 FRONTEND_URL=https://pagemusic-production.up.railway.app
 ```
 
-### Reset de producción (cuando se necesite re-sembrar)
+### Persistencia de la base de datos
+
+**La DB SQLite en Railway es persistente entre redeploys normales.** El archivo `pagemusic.db` sobrevive a los redeploys porque Railway mantiene el volumen del contenedor.
+
+Consecuencias importantes:
+
+- `seedIfEmpty()` **solo se ejecuta una vez**: cuando la DB está completamente vacía (primer deploy o tras un reset manual). En redeploys normales, como ya existen géneros, el seed se salta.
+- **Agregar canciones al `seed.js` no las inserta automáticamente** en la DB existente. El seed solo sirve como respaldo para recuperación total.
+- **Siempre usar `add-songs.js`** para agregar canciones nuevas a producción.
+- Si algún deploy destruye la DB (raro), el seed recrea las 249 canciones automáticamente.
+
+### Reset de producción (cuando se necesite re-sembrar desde cero)
 
 ```bash
 railway login           # abre browser OAuth — requiere interacción
 cd server
 railway run node src/reset-and-seed.js --force
 ```
+
+⚠ Esto borra TODOS los plays y canciones personalizadas. Usar solo en caso de corrupción grave.
 
 ---
 
@@ -476,6 +489,8 @@ Limpia la DB de producción y re-siembra con los datos de `seed.js`. **Requiere 
 ```bash
 node src/reset-and-seed.js --force
 ```
+
+⚠ Borra plays, canciones y géneros. Después del reset, `seedIfEmpty` recrea las 249 canciones del seed. Las canciones agregadas posteriormente con `add-songs.js` que no estén en `seed.js` se perderán — asegúrate de que el seed esté actualizado antes de ejecutar.
 
 ---
 
@@ -560,7 +575,13 @@ Por instrucción del usuario: al finalizar cualquier tarea, registrar en `siguie
 
 Los MP3 van exclusivamente a `PoetaRivera/pagemusic-storage` vía Git LFS. El `.gitignore` ya tiene `*.mp3`. No eliminar esa entrada.
 
-### 13. Al agregar un nuevo género
+### 13. Agregar canciones al `seed.js` no las inserta en producción
+
+La DB en Railway es persistente. `seedIfEmpty` solo corre cuando la DB está vacía. Actualizar `seed.js` solo sirve como respaldo ante un reset total — no reemplaza usar `add-songs.js`. **Flujo correcto al agregar canciones nuevas:**
+1. Usar `add-songs.js` para subirlas a GitHub LFS y a la DB de producción
+2. Añadirlas también al `seed.js` como respaldo (para que sobrevivan un reset total)
+
+### 14. Al agregar un nuevo género
 
 Se deben hacer estos cambios en orden:
 1. Crear la carpeta en `pagemusic-storage` y subir los MP3 con LFS

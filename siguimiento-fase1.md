@@ -115,6 +115,20 @@
   - Top géneros: conteo con texto "plays", barras más gruesas, mejor separación
   - Sección GitHub LFS: solo visible en tab Canciones (no en Estadísticas)
 
+### 2026-04-17 (canciones nuevas)
+- **23 canciones nuevas subidas** desde `C:\CARPETA-RESPALDO\OneDrive\MUSICA-POEMAS\audios\` usando `add-songs.js`
+  - Clasificadas por género usando la regla: primer género que aparece después del guion en el nombre del archivo; géneros no reconocidos → `otros`
+  - WAV correspondientes movidos a `audios/wav/<género>/`
+  - Total en producción: **250 canciones**
+- **Descubrimiento: DB Railway es persistente** entre redeploys normales
+  - `seedIfEmpty` solo corre cuando la DB está vacía — agregar al seed.js no inserta en la DB existente
+  - Flujo correcto: `add-songs.js` para producción + actualizar `seed.js` como respaldo
+  - Documentado en `PAGEMUSIC.md` (sección Despliegue + regla 13)
+- **Bugs corregidos en `add-songs.js`**:
+  - Contraseña con `#` truncada por dotenv → entrecomillar en `.env`
+  - `cover_url: null` y `duration: null` rechazados por Zod → no enviar campos opcionales nulos
+  - `git commit` fallaba si el archivo ya estaba en GitHub → manejo de "nothing to commit"
+
 ## Pendiente / Por donde continuar
 
 - Cobertura de código (coverage report): `cd client && npx vitest run --coverage`
