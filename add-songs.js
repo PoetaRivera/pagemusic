@@ -135,9 +135,20 @@ async function main() {
     const msg = files.length === 1
       ? `add: ${genre}/${files[0]}`
       : `add: ${files.length} canciones en ${genre}`
-    execSync(`git -C "${STORAGE_DIR}" commit -m "${msg}"`, { stdio: 'pipe' })
-    execSync(`git -C "${STORAGE_DIR}" push origin main`, { stdio: 'inherit' })
-    console.log('     ✓ Push exitoso\n')
+    try {
+      execSync(`git -C "${STORAGE_DIR}" commit -m "${msg}"`, { stdio: 'pipe' })
+      execSync(`git -C "${STORAGE_DIR}" push origin main`, { stdio: 'inherit' })
+      console.log('     ✓ Push exitoso\n')
+    } catch (commitErr) {
+      // Si no hay nada nuevo que commitear, los archivos ya están en GitHub
+      if (commitErr.stdout?.toString().includes('nothing to commit') ||
+          commitErr.stderr?.toString().includes('nothing to commit') ||
+          commitErr.message?.includes('nothing to commit')) {
+        console.log('     ℹ  Archivos ya en GitHub, continuando con la DB...\n')
+      } else {
+        throw commitErr
+      }
+    }
   } catch (err) {
     console.error('     ✗ Error en git push:', err.message)
     process.exit(1)
@@ -171,8 +182,6 @@ async function main() {
       title,
       artist: 'PoetaRivera',
       audio_url,
-      cover_url: null,
-      duration: null,
       genre_id: genreObj.id,
     }, token)
 
