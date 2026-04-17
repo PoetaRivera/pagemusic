@@ -254,7 +254,9 @@ export default function AdminDashboardPage() {
                               <p className="text-sm text-white truncate">{s.title}</p>
                               <p className="text-xs text-gray-500 truncate">{s.artist}</p>
                             </div>
-                            <span className="text-purple-400 font-semibold text-sm flex-shrink-0">{s.play_count}x</span>
+                            <span className="text-purple-400 font-semibold text-sm flex-shrink-0">
+                              {s.play_count} {s.play_count === 1 ? 'play' : 'plays'}
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -266,18 +268,20 @@ export default function AdminDashboardPage() {
                   <h3 className="text-white font-semibold mb-4">Top géneros</h3>
                   {stats.topGenres.length === 0
                     ? <p className="text-gray-500 text-sm">Sin datos aún</p>
-                    : <div className="space-y-2">
-                        {stats.topGenres.map((g, i) => {
+                    : <div className="space-y-3">
+                        {stats.topGenres.map((g) => {
                           const max = stats.topGenres[0].play_count
                           const pct = Math.round((g.play_count / max) * 100)
                           return (
                             <div key={g.id}>
                               <div className="flex justify-between text-sm mb-1">
-                                <span className="text-gray-300 truncate">{g.name}</span>
-                                <span className="text-gray-500 flex-shrink-0 ml-2">{g.play_count}</span>
+                                <span className="text-gray-300 capitalize truncate">{g.name}</span>
+                                <span className="text-gray-400 flex-shrink-0 ml-4">
+                                  {g.play_count} {g.play_count === 1 ? 'play' : 'plays'}
+                                </span>
                               </div>
-                              <div className="h-1.5 rounded-full bg-gray-700">
-                                <div className="h-1.5 rounded-full bg-purple-500 transition-all"
+                              <div className="h-2 rounded-full bg-gray-700">
+                                <div className="h-2 rounded-full bg-purple-500 transition-all"
                                   style={{ width: `${pct}%` }} />
                               </div>
                             </div>
@@ -295,18 +299,16 @@ export default function AdminDashboardPage() {
                       const max = Math.max(...stats.byHour.map(h => h.play_count), 1)
                       const pct = (play_count / max) * 100
                       return (
-                        <div key={hour} className="flex-1 flex flex-col items-center gap-1 group relative">
-                          <div className="w-full rounded-sm bg-purple-600 opacity-80 hover:opacity-100 transition-all"
-                            style={{ height: `${Math.max(pct, 2)}%` }}
-                            title={`${hour}:00 — ${play_count} plays`} />
-                          {hour % 6 === 0 && (
-                            <span className="text-gray-600 text-xs absolute -bottom-5">{hour}h</span>
-                          )}
-                        </div>
+                        <div
+                          key={hour}
+                          className="flex-1 rounded-sm bg-purple-600 opacity-80 hover:opacity-100 transition-all cursor-default"
+                          style={{ height: `${Math.max(pct, 2)}%` }}
+                          title={`${hour}:00 — ${play_count} plays`}
+                        />
                       )
                     })}
                   </div>
-                  <div className="mt-6 flex justify-between text-xs text-gray-600 px-0.5">
+                  <div className="mt-2 flex justify-between text-xs text-gray-600 px-0.5">
                     <span>0h</span><span>6h</span><span>12h</span><span>18h</span><span>23h</span>
                   </div>
                 </div>
@@ -319,14 +321,19 @@ export default function AdminDashboardPage() {
                       const max = Math.max(...stats.byWeekday.map(d => d.play_count), 1)
                       const pct = (play_count / max) * 100
                       return (
-                        <div key={name} className="flex-1 flex flex-col items-center gap-2">
-                          <div className="w-full rounded-sm bg-purple-600 opacity-80 hover:opacity-100 transition-all"
-                            style={{ height: `${Math.max(pct, 2)}%` }}
-                            title={`${name} — ${play_count} plays`} />
-                          <span className="text-gray-500 text-xs">{name}</span>
-                        </div>
+                        <div
+                          key={name}
+                          className="flex-1 rounded-sm bg-purple-600 opacity-80 hover:opacity-100 transition-all cursor-default"
+                          style={{ height: `${Math.max(pct, 2)}%` }}
+                          title={`${name} — ${play_count} plays`}
+                        />
                       )
                     })}
+                  </div>
+                  <div className="mt-2 flex gap-2">
+                    {stats.byWeekday.map(({ name }) => (
+                      <div key={name} className="flex-1 text-center text-xs text-gray-500">{name}</div>
+                    ))}
                   </div>
                 </div>
 
@@ -358,8 +365,8 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Sección ayuda GitHub LFS */}
-      <details className="mt-8 bg-gray-800 rounded-xl">
+      {/* Sección ayuda GitHub LFS — solo en tab Canciones */}
+      {tab === 1 && <details className="mt-8 bg-gray-800 rounded-xl">
         <summary className="px-6 py-4 cursor-pointer text-gray-400 hover:text-white text-sm font-medium select-none">
           ¿Cómo subir archivos de audio? (GitHub LFS)
         </summary>
@@ -390,7 +397,7 @@ git commit -m "Add cover" && git push`}
           <p><strong className="text-white">4.</strong> Copia las URLs y pégalas en el formulario de "Nueva canción".</p>
           <p className="text-yellow-600">⚠ Límite gratuito de GitHub LFS: 1 GB almacenamiento y 1 GB/mes de ancho de banda.</p>
         </div>
-      </details>
+      </details>}
 
       {/* Modal crear / editar */}
       <Modal
