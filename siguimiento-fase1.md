@@ -99,8 +99,24 @@
   - BAJOS: Promise.allSettled en stats, .env.example documentado, .gitignore actualizado
   - Tests: 34/34 siguen pasando
 
+### 2026-04-16 (documentación)
+- **Documentación técnica completa del proyecto**: `PAGEMUSIC.md` creado en la raíz
+  - Basada en el código fuente real (no en documentación anterior)
+  - Incluye: estructura de carpetas, stack, todas las rutas API con tabla detallada, esquema DB completo, stores Zustand, variables de entorno, flujo de almacenamiento de audio, scripts de utilidad, setup de tests
+  - **13 reglas obligatorias** para futuras sesiones de modificación (géneros sincronizados, seed sin process.exit, validación Zod, etc.)
+
+### 2026-04-17
+- **Fix: gráficos de estadísticas no mostraban barras**
+  - Gráfico de horas y días: las barras usaban `height: X%` en un div sin altura explícita → siempre se veían vacíos. Fix: barras como hijos directos del contenedor `h-20`.
+  - Labels duplicados (`6h6h`, `12h12h`) eliminados — había dos capas de labels superpuestos.
+  - Separación de labels de días a fila independiente debajo de las barras.
+- **Mejora visual estadísticas**
+  - Top canciones: `3x` → `3 plays` / `1 play`
+  - Top géneros: conteo con texto "plays", barras más gruesas, mejor separación
+  - Sección GitHub LFS: solo visible en tab Canciones (no en Estadísticas)
+
 ## Pendiente / Por donde continuar
 
-- Cobertura de código (coverage report): `vitest run --coverage`
+- Cobertura de código (coverage report): `cd client && npx vitest run --coverage`
 - Agregar tests de páginas (HomePage, GenrePage, AdminLoginPage)
 - Abrir `qrcode.html` en el navegador para visualizar y descargar el QR
