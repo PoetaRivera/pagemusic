@@ -143,6 +143,7 @@ describe('PATCH /api/songs/:id/duration', () => {
     const song = seedSong(genre.id, { title: 'No Duration', duration: null })
     const res = await request(app)
       .patch(`/api/songs/${song.id}/duration`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ duration: 200 })
 
     expect(res.status).toBe(200)
@@ -153,6 +154,7 @@ describe('PATCH /api/songs/:id/duration', () => {
     const song = seedSong(genre.id, { title: 'Has Duration', duration: 180 })
     const res = await request(app)
       .patch(`/api/songs/${song.id}/duration`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ duration: 200 })
 
     expect(res.status).toBe(200)
@@ -163,9 +165,19 @@ describe('PATCH /api/songs/:id/duration', () => {
     const song = seedSong(genre.id, { title: 'Invalid Dur', duration: null })
     const res = await request(app)
       .patch(`/api/songs/${song.id}/duration`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ duration: -5 })
 
     expect(res.status).toBe(400)
+  })
+
+  test('rechaza actualizacion de duracion sin autenticacion', async () => {
+    const song = seedSong(genre.id, { title: 'No Auth Duration', duration: null })
+    const res = await request(app)
+      .patch(`/api/songs/${song.id}/duration`)
+      .send({ duration: 200 })
+
+    expect(res.status).toBe(401)
   })
 })
 

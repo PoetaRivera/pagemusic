@@ -10,7 +10,7 @@ router.get('/', getAll)
 router.get('/search', search)
 router.post('/', requireAdmin, validate(songSchema), create)
 router.put('/:id', requireAdmin, validate(songSchema), update)
-router.patch('/:id/duration', patchDuration)
+router.patch('/:id/duration', requireAdmin, patchDuration)
 router.delete('/:id', requireAdmin, remove)
 
 export default router

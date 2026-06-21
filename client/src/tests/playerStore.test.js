@@ -39,6 +39,19 @@ describe('playSong', () => {
     usePlayerStore.getState().playSong(songB, [songA, songB])
     expect(usePlayerStore.getState().currentTime).toBe(0)
   })
+
+  test('con shuffle activo mantiene la cancion elegida al inicio de la cola', () => {
+    usePlayerStore.setState({ isShuffle: true })
+    usePlayerStore.getState().playSong(songA, [songA, songB, songC])
+
+    const state = usePlayerStore.getState()
+    expect(state.queue[0]).toEqual(songA)
+
+    usePlayerStore.getState().playNext()
+    const nextState = usePlayerStore.getState()
+    expect(nextState.currentSong).not.toEqual(songA)
+    expect(nextState.isPlaying).toBe(true)
+  })
 })
 
 describe('togglePlay', () => {
@@ -121,6 +134,19 @@ describe('toggleShuffle', () => {
     usePlayerStore.getState().toggleShuffle()
     expect(usePlayerStore.getState().isShuffle).toBe(true)
     expect(usePlayerStore.getState().queue).toHaveLength(3)
+  })
+
+  test('al activar shuffle conserva la cancion actual como punto de partida', () => {
+    usePlayerStore.setState({
+      currentSong: songB,
+      isShuffle: false,
+      originalQueue: [songA, songB, songC],
+    })
+    usePlayerStore.getState().toggleShuffle()
+    const state = usePlayerStore.getState()
+    expect(state.isShuffle).toBe(true)
+    expect(state.queue[0]).toEqual(songB)
+    expect(state.queue.map(song => song.id).sort()).toEqual([1, 2, 3])
   })
 
   test('desactiva shuffle y restaura el orden original', () => {

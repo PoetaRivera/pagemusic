@@ -4,8 +4,6 @@ import db from '../db.js'
 export const recordPlay = (req, res) => {
   const { song_id, duration_listened, completed, skipped } = req.body
 
-  if (!song_id) return res.status(400).json({ message: 'song_id requerido' })
-
   const songExists = db.prepare('SELECT id FROM songs WHERE id = ?').get(song_id)
   if (!songExists) return res.status(404).json({ message: 'Canción no encontrada' })
 
@@ -14,7 +12,7 @@ export const recordPlay = (req, res) => {
     VALUES (?, ?, ?, ?)
   `).run(
     song_id,
-    duration_listened || 0,
+    duration_listened,
     completed ? 1 : 0,
     skipped ? 1 : 0
   )

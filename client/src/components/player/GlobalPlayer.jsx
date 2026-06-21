@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { usePlayerStore } from '../../store/playerStore'
+import { useAdminStore } from '../../store/adminStore'
 import { patchSongDuration } from '../../api/songs'
 import { recordPlay } from '../../api/stats'
 import {
@@ -23,6 +24,7 @@ export default function GlobalPlayer() {
   const [isLoading, setIsLoading] = useState(false)
   const [audioError, setAudioError] = useState(null)
   const playSessionRef = useRef(null) // { songId, startTime }
+  const adminToken = useAdminStore(state => state.token)
 
   const {
     currentSong, isPlaying, isShuffle, isRepeat, volume,
@@ -52,8 +54,6 @@ export default function GlobalPlayer() {
     if (!audioRef.current || !currentSong) return
     flushPlaySession(false)
     playSessionRef.current = { songId: currentSong.id }
-    setAudioError(null)
-    setIsLoading(true)
     audioRef.current.src = currentSong.audio_url
     audioRef.current.volume = volume
     audioRef.current.play().catch((err) => {
@@ -121,19 +121,17 @@ export default function GlobalPlayer() {
 
   const displayTime = seeking ? localTime : currentTime
 
-  const repeatIcon = isRepeat === 'one' ? BsRepeat1 : BsRepeat
-  const repeatColor = isRepeat !== 'none' ? 'text-purple-400' : 'text-gray-500 hover:text-white'
-
   return (
     <>
       <audio
         ref={audioRef}
+        onLoadStart={() => { setAudioError(null); setIsLoading(true) }}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={() => {
           const dur = audioRef.current.duration
           setDuration(dur)
           setIsLoading(false)
-          if (currentSong && !currentSong.duration && dur > 0) {
+          if (adminToken && currentSong && !currentSong.duration && dur > 0) {
             patchSongDuration(currentSong.id, dur).catch(() => {})
           }
         }}

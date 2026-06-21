@@ -12,7 +12,13 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   res => res,
   err => {
-    if (err.response?.status === 401) {
+    const headers = err.config?.headers
+    const hadAuth = Boolean(
+      headers?.Authorization ||
+      headers?.authorization ||
+      headers?.get?.('Authorization')
+    )
+    if (err.response?.status === 401 && hadAuth) {
       useAdminStore.getState().logout()
       window.location.href = '/admin'
     }

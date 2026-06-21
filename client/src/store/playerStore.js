@@ -10,6 +10,13 @@ function shuffle(arr) {
   return a
 }
 
+function shuffleAfterCurrent(queue, currentSong) {
+  if (!currentSong) return shuffle(queue)
+  const current = queue.find(song => song.id === currentSong.id)
+  if (!current) return shuffle(queue)
+  return [current, ...shuffle(queue.filter(song => song.id !== currentSong.id))]
+}
+
 export const usePlayerStore = create(
   persist(
     (set, get) => ({
@@ -26,7 +33,7 @@ export const usePlayerStore = create(
 
       playSong: (song, queue) => {
         const original = queue || [song]
-        const ordered = get().isShuffle ? shuffle(original) : original
+        const ordered = get().isShuffle ? shuffleAfterCurrent(original, song) : original
         set({ currentSong: song, queue: ordered, originalQueue: original, isPlaying: true, currentTime: 0 })
       },
 
@@ -60,9 +67,9 @@ export const usePlayerStore = create(
       },
 
       toggleShuffle: () => {
-        const { isShuffle, originalQueue } = get()
+        const { isShuffle, originalQueue, currentSong } = get()
         if (!isShuffle) {
-          set({ isShuffle: true, queue: shuffle(originalQueue) })
+          set({ isShuffle: true, queue: shuffleAfterCurrent(originalQueue, currentSong) })
         } else {
           set({ isShuffle: false, queue: originalQueue })
         }
