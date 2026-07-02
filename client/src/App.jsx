@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { useAdminStore } from './store/adminStore'
 import Navbar from './components/layout/Navbar'
@@ -20,6 +20,7 @@ function AdminProtectedRoute() {
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), [])
 
   return (
     <BrowserRouter>
@@ -29,7 +30,7 @@ export default function App() {
         <div className="flex flex-1 overflow-hidden" style={{ paddingBottom: '76px' }}>
           <Sidebar
             mobileOpen={mobileMenuOpen}
-            onClose={() => setMobileMenuOpen(false)}
+            onClose={closeMobileMenu}
           />
           <main className="flex-1 overflow-y-auto" style={{ color: 'var(--text-primary)' }}>
             <Routes>

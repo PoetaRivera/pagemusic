@@ -51,7 +51,7 @@ export default function PlaylistDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { getPlaylist, removeSong, renamePlaylist, deletePlaylist } = usePlaylistStore()
-  const { playSong, toggleShuffle, isShuffle } = usePlayerStore()
+  const { playSong } = usePlayerStore()
   const [editing, setEditing] = useState(false)
   const [nameInput, setNameInput] = useState('')
 

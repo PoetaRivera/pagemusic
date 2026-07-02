@@ -12,6 +12,9 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   res => res,
   err => {
+    const requestPath = new URL(err.config?.url || '/', window.location.origin).pathname
+    const isAdminPage = window.location.pathname.startsWith('/admin')
+    const isAdminAuthRequest = requestPath.startsWith('/api/admin')
     const headers = err.config?.headers
     const hadAuth = Boolean(
       headers?.Authorization ||
@@ -20,7 +23,9 @@ api.interceptors.response.use(
     )
     if (err.response?.status === 401 && hadAuth) {
       useAdminStore.getState().logout()
-      window.location.href = '/admin'
+      if (isAdminPage || isAdminAuthRequest) {
+        window.location.href = '/admin'
+      }
     }
     return Promise.reject(err)
   }

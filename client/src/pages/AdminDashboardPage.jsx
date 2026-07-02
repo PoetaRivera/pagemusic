@@ -411,7 +411,7 @@ git commit -m "Add cover" && git push`}
       >
         {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
         {modal.type === 'genre' && (
-          <GenreForm initial={modal.item} onSubmit={handleGenreSubmit} loading={saving} />
+          <GenreForm key={modal.item?.id ?? 'new-genre'} initial={modal.item} onSubmit={handleGenreSubmit} loading={saving} />
         )}
         {modal.type === 'song' && (
           <SongForm initial={modal.item} genres={genres} onSubmit={handleSongSubmit} loading={saving} />

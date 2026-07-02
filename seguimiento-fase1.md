@@ -510,3 +510,23 @@ Inspirado en Material Design + tendencias 2025. A mayor elevación (z-index), m�
 1. **Dynamic color extraction**: `colorthief` para teñir el fondo del player según el album art.
 2. **AdminDashboardPage/LoginPage**: migrar colores hardcoded a variables CSS.
 3. **Deploy**: subir a Railway o Render.
+
+---
+
+## Servidor MCP PageMusic ✅ CREADO (2026-06-12)
+
+### Lo que se hizo
+- Nueva carpeta `SERVIDOR MCP PAGEMUSIC/` en `misproyectos/`
+- `src/pagemusic-client.js` — cliente HTTP completo para toda la API de PageMusic (fetch nativo, sin dependencias)
+- `src/server.js` — servidor MCP por stdio (JSON-RPC 2.0) con 23 herramientas:
+  - **8 públicas**: listar_generos, obtener_genero, canciones_por_genero, listar_canciones, buscar_canciones, obtener_artistas, canciones_por_artista, registrar_play
+  - **15 protegidas/admin**: actualizar_duracion, admin_login, admin_verificar_token, admin_crear_genero, admin_editar_genero, admin_eliminar_genero, admin_crear_cancion, admin_editar_cancion, admin_eliminar_cancion, admin_estadisticas_resumen, admin_estadisticas_top_songs, admin_estadisticas_top_generos, admin_estadisticas_por_hora, admin_estadisticas_por_dia, admin_estadisticas_mas_saltadas
+- `package.json`, `README.md`, `.gitignore`
+- Autenticación admin/protegida: por variable de entorno `PAGEMUSIC_ADMIN_TOKEN` o por argumento `token` en cada tool protegida
+- URL de la API configurable con `PAGEMUSIC_URL` (default: `http://localhost:4000`)
+- Smoke test exitoso: inicialización MCP y tools/list responden correctamente
+
+### POR DÓNDE SEGUIR
+- Agregar auto-login con `PAGEMUSIC_ADMIN_USERNAME` y `PAGEMUSIC_ADMIN_PASSWORD` para no tener que pasar token manualmente
+- Probar con PageMusic real corriendo en local o producción
+- Configurar en Claude Code (`claude mcp add`) para usar desde el asistente

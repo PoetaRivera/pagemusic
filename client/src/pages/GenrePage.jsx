@@ -8,19 +8,28 @@ import { usePlayerStore } from '../store/playerStore'
 
 export default function GenrePage() {
   const { id } = useParams()
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [request, setRequest] = useState({ key: id, status: 'loading', data: null })
   const { playSong } = usePlayerStore()
 
   useEffect(() => {
-    setLoading(true)
-    setError(false)
+    let cancelled = false
+
     getGenreWithSongs(id)
-      .then(res => setData(res.data))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
+      .then(res => {
+        if (!cancelled) setRequest({ key: id, status: 'success', data: res.data })
+      })
+      .catch(() => {
+        if (!cancelled) setRequest({ key: id, status: 'error', data: null })
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [id])
+
+  const loading = request.key !== id || request.status === 'loading'
+  const error = request.key === id && request.status === 'error'
+  const data = request.key === id ? request.data : null
 
   if (loading) return <div className="max-w-screen-xl mx-auto px-6 py-10"><Spinner /></div>
 

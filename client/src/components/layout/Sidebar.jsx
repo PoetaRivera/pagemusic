@@ -14,7 +14,7 @@ export default function Sidebar({ mobileOpen, onClose }) {
   // Cerrar drawer en móvil al navegar
   useEffect(() => {
     onClose?.()
-  }, [location.pathname])
+  }, [location.pathname, onClose])
 
   const navItem = (to, Icon, label) => (
     <NavLink
@@ -92,11 +92,6 @@ export default function Sidebar({ mobileOpen, onClose }) {
         )}
       </nav>
 
-      {!isAdmin && (
-        <div className="px-2 pb-4">
-          {navItem('/admin', BsShieldLock, 'Admin')}
-        </div>
-      )}
 
       {isAdmin && (
         <div className="px-2 pb-4">

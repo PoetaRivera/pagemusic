@@ -10,3 +10,4 @@ client/dist/
 *.mp3
 server/seed-data.json
 .claude/
+.codex/

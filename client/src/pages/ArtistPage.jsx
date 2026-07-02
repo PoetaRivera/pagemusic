@@ -8,19 +8,28 @@ import { usePlayerStore } from '../store/playerStore'
 
 export default function ArtistPage() {
   const { name } = useParams()
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [request, setRequest] = useState({ key: name, status: 'loading', data: null })
   const { playSong } = usePlayerStore()
 
   useEffect(() => {
-    setLoading(true)
-    setError(false)
+    let cancelled = false
+
     getArtistWithSongs(name)
-      .then(res => setData(res.data))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
+      .then(res => {
+        if (!cancelled) setRequest({ key: name, status: 'success', data: res.data })
+      })
+      .catch(() => {
+        if (!cancelled) setRequest({ key: name, status: 'error', data: null })
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [name])
+
+  const loading = request.key !== name || request.status === 'loading'
+  const error = request.key === name && request.status === 'error'
+  const data = request.key === name ? request.data : null
 
   if (loading) return <div className="max-w-screen-xl mx-auto px-6 py-10"><Spinner /></div>
 

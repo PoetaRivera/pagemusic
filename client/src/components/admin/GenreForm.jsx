@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const empty = { name: '', description: '', cover_url: '' }
 
-export default function GenreForm({ initial, onSubmit, loading }) {
-  const [form, setForm] = useState(empty)
+const getInitialForm = (initial) => initial
+  ? { name: initial.name, description: initial.description || '', cover_url: initial.cover_url || '' }
+  : empty
 
-  useEffect(() => {
-    setForm(initial ? { name: initial.name, description: initial.description || '', cover_url: initial.cover_url || '' } : empty)
-  }, [initial])
+export default function GenreForm({ initial, onSubmit, loading }) {
+  const [form, setForm] = useState(() => getInitialForm(initial))
 
   const set = (field) => (e) => setForm(f => ({ ...f, [field]: e.target.value }))
 

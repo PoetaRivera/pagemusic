@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { usePlayerStore } from '../../store/playerStore'
 import { useAdminStore } from '../../store/adminStore'
 import { patchSongDuration } from '../../api/songs'
@@ -24,7 +25,10 @@ export default function GlobalPlayer() {
   const [isLoading, setIsLoading] = useState(false)
   const [audioError, setAudioError] = useState(null)
   const playSessionRef = useRef(null) // { songId, startTime }
+  const volumeRef = useRef(1)
   const adminToken = useAdminStore(state => state.token)
+  const location = useLocation()
+  const isAdminRoute = location.pathname.startsWith('/admin')
 
   const {
     currentSong, isPlaying, isShuffle, isRepeat, volume,
@@ -55,7 +59,7 @@ export default function GlobalPlayer() {
     flushPlaySession(false)
     playSessionRef.current = { songId: currentSong.id }
     audioRef.current.src = currentSong.audio_url
-    audioRef.current.volume = volume
+    audioRef.current.volume = volumeRef.current
     audioRef.current.play().catch((err) => {
       setAudioError('No se pudo reproducir el audio')
       setIsLoading(false)
@@ -74,10 +78,11 @@ export default function GlobalPlayer() {
     } else {
       audioRef.current.pause()
     }
-  }, [isPlaying])
+  }, [isPlaying, currentSong])
 
   // Volumen
   useEffect(() => {
+    volumeRef.current = volume
     if (audioRef.current) audioRef.current.volume = volume
   }, [volume])
 
@@ -86,7 +91,7 @@ export default function GlobalPlayer() {
     if (!seeking && audioRef.current && Math.abs(audioRef.current.currentTime - currentTime) > 1.5) {
       audioRef.current.currentTime = currentTime
     }
-  }, [currentTime])
+  }, [currentTime, seeking])
 
   // repeat: 'one' → reinicia el audio en lugar de llamar playNext
   const handleEnded = () => {
@@ -131,7 +136,7 @@ export default function GlobalPlayer() {
           const dur = audioRef.current.duration
           setDuration(dur)
           setIsLoading(false)
-          if (adminToken && currentSong && !currentSong.duration && dur > 0) {
+          if (isAdminRoute && adminToken && currentSong && !currentSong.duration && dur > 0) {
             patchSongDuration(currentSong.id, dur).catch(() => {})
           }
         }}
